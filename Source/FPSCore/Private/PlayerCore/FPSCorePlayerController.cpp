@@ -13,6 +13,6 @@ AFPSCorePlayerState* AFPSCorePlayerController::GetFPSCorePlayerState() const
 
 UAbilitySystemComponent* AFPSCorePlayerController::GetFPSCoreAbilitySystemComponent() const
 {
-	const AFPSCorePlayerState* PlayerState = GetFPSCorePlayerState();
-	return CastChecked<UFPSCoreAbilitySystemComponent>(PlayerState->GetAbilitySystemComponent());
+	const AFPSCorePlayerState* FPSCorePlayerState = GetFPSCorePlayerState();
+	return CastChecked<UFPSCoreAbilitySystemComponent>(FPSCorePlayerState->GetAbilitySystemComponent());
 }
