@@ -17,10 +17,11 @@ class FPSCORE_API AFPSCorePlayerController : public APlayerController
 	AFPSCorePlayerState* GetFPSCorePlayerState() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Input System|FPS Core Ability System Component")
-	UAbilitySystemComponent* GetFPSCoreAbilitySystemComponent() const;
+	UFPSCoreAbilitySystemComponent* GetFPSCoreAbilitySystemComponent() const;
 
 	protected:
-
+		virtual void PreProcessInput(const float DeltaTime, const bool bGamePaused) override;
+		virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
 	
 	
 };
