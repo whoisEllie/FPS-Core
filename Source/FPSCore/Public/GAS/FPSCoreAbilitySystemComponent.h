@@ -22,6 +22,8 @@ class FPSCORE_API UFPSCoreAbilitySystemComponent : public UAbilitySystemComponen
 	virtual void AbilitySpecInputPressed(FGameplayAbilitySpec& Spec) override;
 	virtual void AbilitySpecInputReleased(FGameplayAbilitySpec& Spec) override;
 
+	virtual void CancelAbilitySpec(FGameplayAbilitySpec& Spec, UGameplayAbility* Ignore) override;
+
 	protected:
 	// Handles for abilities that had their inputs pressed this frame
 	TArray<FGameplayAbilitySpecHandle> InputPressedSpecHandles;
@@ -31,4 +33,7 @@ class FPSCORE_API UFPSCoreAbilitySystemComponent : public UAbilitySystemComponen
 
 	// Handles for abilities that have their inputs held this frame
     TArray<FGameplayAbilitySpecHandle> InputHeldSpecHandles;
+    
+    // Handles for abilities that are currently blocked from executing
+    TArray<FGameplayAbilitySpecHandle> InputBlockedSpecHandles;
 };

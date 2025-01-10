@@ -29,6 +29,5 @@ void AFPSCorePlayerController::PostProcessInput(const float DeltaTime, const boo
 		ASC->ProcessAbilityInput(DeltaTime, bGamePaused);
 	}
 
-	
 	Super::PostProcessInput(DeltaTime, bGamePaused);
 }

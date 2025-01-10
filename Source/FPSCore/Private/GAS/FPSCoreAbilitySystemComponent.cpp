@@ -2,12 +2,12 @@
 #include "GAS/FPSCoreAbilitySystemComponent.h"
 #include "GAS/FPSCoreGameplayAbility.h"
 
-
 UFPSCoreAbilitySystemComponent::UFPSCoreAbilitySystemComponent()
 {
 	InputPressedSpecHandles.Reset();
 	InputReleasedSpecHandles.Reset();
 	InputHeldSpecHandles.Reset();
+	InputBlockedSpecHandles.Reset();
 }
 
 void UFPSCoreAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& InputTag)
@@ -35,10 +35,20 @@ void UFPSCoreAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag&
 			{
 				InputReleasedSpecHandles.AddUnique(AbilitySpec.Handle);
 				InputHeldSpecHandles.Remove(AbilitySpec.Handle);
+				InputBlockedSpecHandles.Remove(AbilitySpec.Handle);
 			}
 		}
 	}
 }
+
+void UFPSCoreAbilitySystemComponent::CancelAbilitySpec(FGameplayAbilitySpec& Spec, UGameplayAbility* Ignore)
+{
+	Super::CancelAbilitySpec(Spec, Ignore);
+
+	InputBlockedSpecHandles.AddUnique(Spec.Handle);
+	InputPressedSpecHandles.Remove(Spec.Handle);
+}
+
 
 void UFPSCoreAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGamePaused)
 {
@@ -53,7 +63,7 @@ void UFPSCoreAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool b
 			{
 				const UFPSCoreGameplayAbility* FPSCoreGameplayAbility = CastChecked<UFPSCoreGameplayAbility>(AbilitySpec->Ability);
 
-				if (FPSCoreGameplayAbility->GetActivationPolicy() == EFPSCoreAbilityActivationPolicy::WhileInputActive)
+				if (FPSCoreGameplayAbility->GetActivationPolicy() == EFPSCoreAbilityActivationPolicy::WhileInputActive && !InputBlockedSpecHandles.Contains(AbilitySpec->Handle))
 				{
 					AbilitiesToActivate.AddUnique(AbilitySpec->Handle);
 				}
@@ -77,9 +87,10 @@ void UFPSCoreAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool b
 				{
 					const UFPSCoreGameplayAbility* GameplayAbility = CastChecked<UFPSCoreGameplayAbility>(AbilitySpec->Ability);
 
-					if (GameplayAbility->GetActivationPolicy() == EFPSCoreAbilityActivationPolicy::OnInputTriggered)
+					if (GameplayAbility->GetActivationPolicy() == EFPSCoreAbilityActivationPolicy::OnInputTriggered && !InputBlockedSpecHandles.Contains(AbilitySpec->Handle))
 					{
 						AbilitiesToActivate.AddUnique(AbilitySpec->Handle);
+						InputBlockedSpecHandles.AddUnique(AbilitySpec->Handle);
 					}
 				}
 			}
@@ -116,6 +127,7 @@ void UFPSCoreAbilitySystemComponent::ClearAbilityInput()
 	InputPressedSpecHandles.Reset();
 	InputReleasedSpecHandles.Reset();
 	InputHeldSpecHandles.Reset();
+	InputBlockedSpecHandles.Reset();
 }
 
 void UFPSCoreAbilitySystemComponent::AbilitySpecInputPressed(FGameplayAbilitySpec& Spec)
