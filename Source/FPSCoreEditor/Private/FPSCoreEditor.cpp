@@ -1,7 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "FPSCoreEditor.h"
-
 #include "AssetTypeActions_Base.h"
 #include "FPSCoreCustomSettings.h"
 #include "FPSCoreEditorStyle.h"
@@ -15,9 +14,6 @@
 #include "Styling/SlateStyleRegistry.h"
 #include "WeaponCore/AmmoType.h"
 #include "WeaponCore/LineTraceTemplate.h"
-#include "WeaponCore/ProjectileTemplate.h"
-
-static const FName FPSCoreEditorTabName("FPSCoreEditor");
 
 #define LOCTEXT_NAMESPACE "FFPSCoreEditorModule"
 
@@ -88,6 +84,14 @@ void FFPSCoreEditorModule::StartupModule()
 
 	UToolMenus::RegisterStartupCallback(FSimpleMulticastDelegate::FDelegate::CreateRaw(this, &FFPSCoreEditorModule::RegisterMenus));
 
+
+	FAssetToolsModule::GetModule().Get().RegisterAdvancedAssetCategory(FName("Weapon Core"), FText::FromString("Weapon Core"));
+
+	IAssetTools& AssetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools").Get();
+	{
+		RegisterAssetTypeActions(AssetTools, MakeShareable(new FAmmoTypeActions));
+	}
+	
 	// Registering custom styles
 	StyleSet = MakeShared<FFPSCoreSlateStyle>();
 	FSlateStyleRegistry::RegisterSlateStyle(*StyleSet.Get());

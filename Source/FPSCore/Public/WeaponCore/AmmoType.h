@@ -15,19 +15,14 @@ class FPSCORE_API UAmmoType : public UObject
 
 public:
 
-	FName GetDisplayName() const { return AmmoTypeName; }
-
-	FName GetDisplayCaliber() const { return Caliber; }
+	TMap<FName, FName> GetAmmoData() const { return AmmoData; }
 
 	UTexture2D* GetDisplayIcon() const { return Icon; }
 
 private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Ammo Type")
-	FName AmmoTypeName;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Ammo Type")
-	FName Caliber;
+	TMap<FName, FName> AmmoData;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Ammo Type")
 	UTexture2D* Icon;	
