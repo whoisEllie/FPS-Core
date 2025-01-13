@@ -20,6 +20,8 @@ It abstracts a number of core functions and behaviours (hence, FPS Core) to pre-
 
 ### features
 
+- Native Gameplay Ability System integrations
+- Lyra-like GameplayTag-based input
 - **TBD!**
 
 ### installation
